@@ -2,7 +2,7 @@ import { useState } from "react";
 import NeomorphicInput from "./NeomorphicInput";
 import NeomorphicButton from "./NeomorphicButton";
 import { QrCode, Copy, Check } from "lucide-react";
-import QRCode from "qrcode.react";
+import { QRCodeSVG } from "qrcode.react";
 
 export default function ShareCard() {
   const [text, setText] = useState("");
@@ -56,7 +56,7 @@ export default function ShareCard() {
       {showQR && text && (
         <div className="flex justify-center pt-4">
           <div className="neo-card bg-white p-4">
-            <QRCode value={text} size={200} level="H" />
+            <QRCodeSVG value={text} size={200} level="H" />
           </div>
         </div>
       )}
