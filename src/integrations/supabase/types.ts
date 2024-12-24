@@ -9,7 +9,74 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
-      [_ in never]: never
+      device_connections: {
+        Row: {
+          connection_id: string
+          created_at: string | null
+          guest_device_id: string | null
+          host_device_id: string
+          id: string
+          status: string | null
+        }
+        Insert: {
+          connection_id: string
+          created_at?: string | null
+          guest_device_id?: string | null
+          host_device_id: string
+          id?: string
+          status?: string | null
+        }
+        Update: {
+          connection_id?: string
+          created_at?: string | null
+          guest_device_id?: string | null
+          host_device_id?: string
+          id?: string
+          status?: string | null
+        }
+        Relationships: []
+      }
+      shared_content: {
+        Row: {
+          connection_id: string
+          content: string | null
+          content_type: string
+          created_at: string | null
+          file_path: string | null
+          id: string
+          recipient_device_id: string
+          sender_device_id: string
+        }
+        Insert: {
+          connection_id: string
+          content?: string | null
+          content_type: string
+          created_at?: string | null
+          file_path?: string | null
+          id?: string
+          recipient_device_id: string
+          sender_device_id: string
+        }
+        Update: {
+          connection_id?: string
+          content?: string | null
+          content_type?: string
+          created_at?: string | null
+          file_path?: string | null
+          id?: string
+          recipient_device_id?: string
+          sender_device_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "shared_content_connection_id_fkey"
+            columns: ["connection_id"]
+            isOneToOne: false
+            referencedRelation: "device_connections"
+            referencedColumns: ["connection_id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
