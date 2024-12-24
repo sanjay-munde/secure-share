@@ -15,10 +15,47 @@ export default function ShareCard() {
   const [isConnecting, setIsConnecting] = useState(false);
 
   useEffect(() => {
-    if (!connectionId) {
+    // Check URL parameters for connection info
+    const urlParams = new URLSearchParams(window.location.search);
+    const urlConnectionId = urlParams.get('connectionId');
+    const hostDeviceId = urlParams.get('hostDeviceId');
+    const action = urlParams.get('action');
+
+    // If this is a connection request from QR code
+    if (urlConnectionId && hostDeviceId && action === 'connect') {
+      handleQrConnection(urlConnectionId, hostDeviceId);
+      // Clean up URL after processing
+      window.history.replaceState({}, '', window.location.pathname);
+    } else if (!connectionId) {
       setConnectionId(nanoid());
     }
   }, []);
+
+  const handleQrConnection = async (urlConnectionId: string, hostDeviceId: string) => {
+    setIsConnecting(true);
+    setConnectionId(urlConnectionId);
+
+    try {
+      const { error } = await supabase
+        .from('device_connections')
+        .update({
+          guest_device_id: deviceId,
+          status: 'connected'
+        })
+        .eq('connection_id', urlConnectionId)
+        .eq('host_device_id', hostDeviceId);
+
+      if (error) throw error;
+      
+      setIsConnected(true);
+      toast.success("Connected successfully!");
+    } catch (error) {
+      console.error('Error connecting via QR:', error);
+      toast.error("Failed to connect. Please try again.");
+    } finally {
+      setIsConnecting(false);
+    }
+  };
 
   useEffect(() => {
     if (!connectionId) return;
@@ -188,7 +225,7 @@ export default function ShareCard() {
         <h3 className="font-medium text-gray-700 mb-2">How it works:</h3>
         <ol className="list-decimal list-inside space-y-1">
           <li>Click "QR Code" to generate a connection code</li>
-          <li>Scan the QR code with another device or enter the 4-digit code</li>
+          <li>Scan the QR code with another device to connect automatically</li>
           <li>Once connected, enter text and click "Share Text"</li>
           <li>The text will appear on the connected device instantly</li>
         </ol>

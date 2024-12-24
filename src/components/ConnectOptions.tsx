@@ -18,6 +18,18 @@ export default function ConnectOptions({
   const [showQR, setShowQR] = useState(false);
   const [pinCode, setPinCode] = useState("");
 
+  // Generate the connection URL that will be encoded in the QR code
+  const getConnectionUrl = () => {
+    // Get the current origin (base URL) of the application
+    const baseUrl = window.location.origin;
+    // Create a URL with connection parameters
+    const connectionUrl = new URL(baseUrl);
+    connectionUrl.searchParams.set("connectionId", connectionId);
+    connectionUrl.searchParams.set("hostDeviceId", deviceId);
+    connectionUrl.searchParams.set("action", "connect");
+    return connectionUrl.toString();
+  };
+
   return (
     <div className="space-y-4">
       <div className="text-center space-y-2">
@@ -62,11 +74,7 @@ export default function ConnectOptions({
         <div className="flex justify-center pt-4">
           <div className="bg-white p-6 rounded-xl shadow-lg">
             <QRCodeSVG 
-              value={JSON.stringify({
-                connectionId,
-                hostDeviceId: deviceId,
-                type: 'connection'
-              })}
+              value={getConnectionUrl()}
               size={200}
               level="H"
               className="mx-auto"
