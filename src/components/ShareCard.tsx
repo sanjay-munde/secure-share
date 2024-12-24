@@ -1,13 +1,13 @@
 import { useState, useEffect } from "react";
-import { QrCode, Copy, Check, Loader2 } from "lucide-react";
-import { QRCodeSVG } from "qrcode.react";
+import { Copy, Check } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { nanoid } from "nanoid";
 import { toast } from "sonner";
+import ConnectionStatus from "./ConnectionStatus";
+import ConnectOptions from "./ConnectOptions";
 
 export default function ShareCard() {
   const [text, setText] = useState("");
-  const [showQR, setShowQR] = useState(false);
   const [copied, setCopied] = useState(false);
   const [connectionId, setConnectionId] = useState("");
   const [deviceId] = useState(nanoid());
@@ -33,7 +33,7 @@ export default function ShareCard() {
           table: 'device_connections',
           filter: `connection_id=eq.${connectionId}`,
         },
-        async (payload) => {
+        async (payload: any) => {
           if (payload.new.status === 'connected') {
             setIsConnected(true);
             setIsConnecting(false);
@@ -61,7 +61,7 @@ export default function ShareCard() {
           table: 'shared_content',
           filter: `recipient_device_id=eq.${deviceId}`,
         },
-        async (payload) => {
+        async (payload: any) => {
           if (payload.new.content_type === 'text') {
             setText(payload.new.content);
             toast.success("New text received!");
@@ -92,7 +92,6 @@ export default function ShareCard() {
         });
 
       if (error) throw error;
-      setShowQR(true);
     } catch (error) {
       console.error('Error creating connection:', error);
       toast.error("Failed to initialize connection");
@@ -134,86 +133,66 @@ export default function ShareCard() {
   };
 
   return (
-    <div className="apple-card space-y-6 max-w-md mx-auto">
-      <h2 className="text-2xl font-semibold text-foreground">
-        Share Securely
-      </h2>
-      
-      <div className="space-y-4">
-        <input
-          type="text"
-          placeholder="Enter text to share..."
-          value={text}
-          onChange={(e) => setText(e.target.value)}
-          className="apple-input"
-        />
-        
-        <div className="flex gap-4">
-          {!showQR ? (
-            <button
-              onClick={initializeConnection}
-              disabled={isConnecting}
-              className="apple-button-secondary flex items-center gap-2 w-full justify-center"
-            >
-              {isConnecting ? (
-                <Loader2 className="w-5 h-5 animate-spin" />
-              ) : (
-                <>
-                  <QrCode className="w-5 h-5" />
-                  Connect Device
-                </>
-              )}
-            </button>
-          ) : (
-            <button
-              onClick={() => setShowQR(false)}
-              className="apple-button-secondary flex items-center gap-2"
-            >
-              <QrCode className="w-5 h-5" />
-              Hide QR
-            </button>
-          )}
-          
-          <button
-            onClick={handleShare}
-            className="apple-button flex items-center gap-2"
-            disabled={!text || !isConnected}
-          >
-            {copied ? (
-              <Check className="w-5 h-5" />
-            ) : (
-              <Copy className="w-5 h-5" />
-            )}
-            Share
-          </button>
-        </div>
+    <div className="max-w-md mx-auto bg-white rounded-xl shadow-lg overflow-hidden p-6 space-y-6">
+      <div className="space-y-2">
+        <h2 className="text-2xl font-bold text-gray-900">
+          Share Securely
+        </h2>
+        <p className="text-gray-500">
+          Connect devices and share text securely in real-time.
+        </p>
       </div>
 
-      {showQR && connectionId && (
-        <div className="flex justify-center pt-4">
-          <div className="apple-card bg-white p-4">
-            <QRCodeSVG 
-              value={JSON.stringify({
-                connectionId,
-                hostDeviceId: deviceId,
-                type: 'connection'
-              })}
-              size={200}
-              level="H"
-              className="mx-auto"
-            />
-            <p className="text-sm text-muted-foreground mt-4 text-center">
-              Scan with another device to connect
-            </p>
-          </div>
+      <div className="space-y-4">
+        <div className="space-y-2">
+          <label htmlFor="text-input" className="block text-sm font-medium text-gray-700">
+            Text to Share
+          </label>
+          <input
+            id="text-input"
+            type="text"
+            placeholder="Enter text to share..."
+            value={text}
+            onChange={(e) => setText(e.target.value)}
+            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+          />
         </div>
-      )}
 
-      {isConnected && (
-        <div className="text-sm text-green-600 text-center">
-          Device connected successfully! You can now share text.
-        </div>
-      )}
+        <ConnectOptions
+          connectionId={connectionId}
+          deviceId={deviceId}
+          isConnecting={isConnecting}
+          onInitConnection={initializeConnection}
+        />
+
+        <ConnectionStatus
+          isConnected={isConnected}
+          isConnecting={isConnecting}
+        />
+
+        <button
+          onClick={handleShare}
+          className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg shadow-sm transition-colors flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+          disabled={!text || !isConnected}
+        >
+          {copied ? (
+            <Check className="w-5 h-5" />
+          ) : (
+            <Copy className="w-5 h-5" />
+          )}
+          Share Text
+        </button>
+      </div>
+
+      <div className="text-sm text-gray-500">
+        <h3 className="font-medium text-gray-700 mb-2">How it works:</h3>
+        <ol className="list-decimal list-inside space-y-1">
+          <li>Click "QR Code" to generate a connection code</li>
+          <li>Scan the QR code with another device or enter the 4-digit code</li>
+          <li>Once connected, enter text and click "Share Text"</li>
+          <li>The text will appear on the connected device instantly</li>
+        </ol>
+      </div>
     </div>
   );
 }
