@@ -1,5 +1,5 @@
 import React from 'react';
-import ShareCard from '@/components/ShareCard';  // Add this import
+import ShareCard from '@/components/ShareCard';
 
 const Index = () => {
   return (

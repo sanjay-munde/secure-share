@@ -16,6 +16,7 @@ export type Database = {
           guest_device_id: string | null
           host_device_id: string
           id: string
+          pin_code: string | null
           status: string | null
         }
         Insert: {
@@ -24,6 +25,7 @@ export type Database = {
           guest_device_id?: string | null
           host_device_id: string
           id?: string
+          pin_code?: string | null
           status?: string | null
         }
         Update: {
@@ -32,6 +34,7 @@ export type Database = {
           guest_device_id?: string | null
           host_device_id?: string
           id?: string
+          pin_code?: string | null
           status?: string | null
         }
         Relationships: []
