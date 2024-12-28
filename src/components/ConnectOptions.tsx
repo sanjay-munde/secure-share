@@ -96,14 +96,7 @@ export default function ConnectOptions({
   };
 
   return (
-    <div className="space-y-4">
-      <div className="text-center space-y-2">
-        <h3 className="text-lg font-medium">Connect Devices</h3>
-        <p className="text-sm text-gray-500">
-          Scan QR code or use a 4-digit code to connect devices
-        </p>
-      </div>
-
+    <div className="space-y-6">
       <div className="grid grid-cols-2 gap-4">
         <button
           onClick={() => {
@@ -112,7 +105,7 @@ export default function ConnectOptions({
             setShowGeneratedPin(false);
           }}
           disabled={isConnecting}
-          className="bg-gray-50 hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-300 rounded-lg shadow-sm transition-colors flex items-center justify-center gap-2"
+          className="bg-neo-bg shadow-neo-sm hover:shadow-neo active:shadow-neo-inner px-6 py-3 rounded-xl transition-all duration-200 flex items-center justify-center gap-2 text-neo-text disabled:opacity-50 disabled:cursor-not-allowed"
         >
           {isConnecting ? (
             <Loader2 className="w-5 h-5 animate-spin" />
@@ -127,16 +120,16 @@ export default function ConnectOptions({
         <button
           onClick={handleGeneratePin}
           disabled={isConnecting}
-          className="bg-gray-50 hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-300 rounded-lg shadow-sm transition-colors"
+          className="bg-neo-bg shadow-neo-sm hover:shadow-neo active:shadow-neo-inner px-6 py-3 rounded-xl transition-all duration-200 text-neo-text disabled:opacity-50 disabled:cursor-not-allowed"
         >
           Generate PIN
         </button>
       </div>
 
       {showGeneratedPin && generatedPin && (
-        <div className="text-center p-4 bg-gray-50 rounded-lg border border-gray-200">
-          <p className="text-sm text-gray-600 mb-2">Share this PIN with the other device:</p>
-          <p className="text-3xl font-bold tracking-wider text-blue-600">{generatedPin}</p>
+        <div className="bg-white/50 p-6 rounded-xl shadow-neo-sm space-y-2">
+          <p className="text-neo-text/70 text-center">Share this PIN with the other device:</p>
+          <p className="text-3xl font-bold tracking-wider text-neo-accent text-center">{generatedPin}</p>
         </div>
       )}
 
@@ -147,27 +140,27 @@ export default function ConnectOptions({
           placeholder="Enter 4-digit PIN"
           value={pinCode}
           onChange={(e) => setPinCode(e.target.value.replace(/\D/g, '').slice(0, 4))}
-          className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+          className="flex-1 px-4 py-3 rounded-xl bg-white/50 shadow-neo-inner focus:outline-none focus:ring-2 focus:ring-neo-accent/50 text-neo-text placeholder:text-neo-text/50"
         />
         <button
           onClick={handleConnectWithPin}
           disabled={pinCode.length !== 4}
-          className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed"
+          className="bg-neo-accent text-white px-6 py-3 rounded-xl shadow-neo-sm hover:shadow-neo active:shadow-neo-inner transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
         >
           Connect
         </button>
       </div>
 
       {showQR && connectionId && (
-        <div className="flex justify-center pt-4">
-          <div className="bg-white p-6 rounded-xl shadow-lg">
+        <div className="flex justify-center">
+          <div className="bg-white/50 p-8 rounded-xl shadow-neo-sm">
             <QRCodeSVG 
               value={getConnectionUrl()}
               size={200}
               level="H"
               className="mx-auto"
             />
-            <p className="text-sm text-gray-500 mt-4 text-center">
+            <p className="text-neo-text/70 mt-4 text-center">
               Scan with another device to connect
             </p>
           </div>

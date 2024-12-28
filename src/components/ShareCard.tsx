@@ -107,13 +107,13 @@ export default function ShareCard() {
   };
 
   return (
-    <div className="max-w-md mx-auto bg-white rounded-xl shadow-lg overflow-hidden p-6 space-y-6">
-      <div className="space-y-2">
-        <h2 className="text-2xl font-bold text-gray-900">
+    <div className="bg-neo-bg rounded-2xl shadow-neo p-8 space-y-8">
+      <div className="space-y-4">
+        <h2 className="text-2xl font-bold text-neo-text text-center">
           Share Securely
         </h2>
-        <p className="text-gray-500">
-          Connect devices and share text securely in real-time.
+        <p className="text-neo-text/70 text-center">
+          Connect devices and share text securely in real-time
         </p>
       </div>
 
@@ -139,9 +139,9 @@ export default function ShareCard() {
       />
 
       {!isConnected && (
-        <div className="text-sm text-gray-500">
-          <h3 className="font-medium text-gray-700 mb-2">How it works:</h3>
-          <ol className="list-decimal list-inside space-y-1">
+        <div className="bg-white/50 rounded-xl p-6 shadow-neo-sm">
+          <h3 className="font-medium text-neo-text mb-4">How it works:</h3>
+          <ol className="list-decimal list-inside space-y-2 text-neo-text/80">
             <li>Click "QR Code" to scan with another device</li>
             <li>Or generate a PIN code to share manually</li>
             <li>Once connected, you can start chatting</li>
