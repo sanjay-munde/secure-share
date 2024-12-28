@@ -10,9 +10,7 @@ const NeomorphicButton = forwardRef<HTMLButtonElement, NeomorphicButtonProps>(
     return (
       <button
         className={cn(
-          "neo-button",
-          variant === "primary" && "text-neo-accent",
-          variant === "secondary" && "text-neo-text",
+          variant === "primary" ? "apple-button" : "apple-button-secondary",
           className
         )}
         ref={ref}

@@ -7,7 +7,7 @@ const NeomorphicInput = forwardRef<HTMLInputElement, NeomorphicInputProps>(
   ({ className, ...props }, ref) => {
     return (
       <input
-        className={cn("neo-input w-full", className)}
+        className={cn("apple-input", className)}
         ref={ref}
         {...props}
       />
